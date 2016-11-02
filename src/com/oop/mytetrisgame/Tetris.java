@@ -15,9 +15,11 @@ public class Tetris extends JFrame {
 		Board board = new Board(this);
 		add(board);
 		
-		//add one piece
-		board.newPiece();
-		board.repaint();
+		//board.newPiece(); //test game by add one piece
+		//board.repaint(); //test game by add one piece
+		
+		//start lines down
+		board.started();
 		
 		setSize(200, 400);
 		setTitle("Tetris Game");
@@ -32,6 +34,5 @@ public class Tetris extends JFrame {
 		Tetris myTetris = new Tetris();
 		myTetris.setLocationRelativeTo(null); //center
 		myTetris.setVisible(true);
-		//can check tetris board with one piece  but no interaction
 	}
 }
