@@ -1,24 +1,25 @@
 package com.oop.mytetrisgame;
 
+import java.awt.Color;
 import java.util.Random;
 
 public class Shape {
-
 	enum Tetrominos {
-		NoShape(new int[][] { {0,0} , {0,0} , {0,0} , {0,0} }),
-		ZShape(new int[][] { {0,-1} , {0,0} , {-1,0} , {-1,1} }),
-		SShape(new int[][] { {0,-1} , {0,0} , {1,0} , {1,1} }),
-		LineShape(new int[][] { {0,-1} , {0,0} , {0,1} , {0,2} }),
-		TShape(new int[][] { {-1,0} , {0,0} , {1,0} , {0,1} }),
-		SquareShape(new int[][] { {0,0} , {1,0} , {0,1} , {1,1} }),
-		LShape(new int[][] { {-1,-1} , {0,-1} , {0,0} , {0,1} }),
-		LShapeInv(new int[][] { {1,-1} , {0,-1} , {0,0} , {0,1} }),
-		;
-		
-		public int [][] coords; //coords for tetrominos
+		NoShape(new int[][] { {0,0} , {0,0} , {0,0} , {0,0} }, new Color(0, 0, 0)),
+		ZShape(new int[][] { {0,-1} , {0,0} , {-1,0} , {-1,1} }, new Color(204, 102, 102)),
+		SShape(new int[][] { {0,-1} , {0,0} , {1,0} , {1,1} }, new Color(102, 204, 102)),
+		LineShape(new int[][] { {0,-1} , {0,0} , {0,1} , {0,2} }, new Color(102, 102, 204)),
+		TShape(new int[][] { {-1,0} , {0,0} , {1,0} , {0,1} }, new Color(204, 204, 102)),
+		SquareShape(new int[][] { {0,0} , {1,0} , {0,1} , {1,1} }, new Color(204, 102, 204)),
+		LShape(new int[][] { {-1,-1} , {0,-1} , {0,0} , {0,1} }, new Color(102, 204, 204)),
+		LShapeInv(new int[][] { {1,-1} , {0,-1} , {0,0} , {0,1} }, new Color(218, 170, 0));
 	
-		private Tetrominos(int[][] coords) {
+		public int [][] coords; //coords for tetrominos
+		public Color color;
+	
+		private Tetrominos(int[][] coords, Color c) {
 			this.coords = coords;
+			color = c;
 		}
 	}
 	
@@ -33,7 +34,7 @@ public class Shape {
 	
 	public void setShape(Tetrominos shape) {
 		for(int i = 0; i < 4; i++) {
-			for(int j = 0; j <2; j++) {
+			for(int j = 0; j <2; ++j) {
 				coords[i][j] = shape.coords[i][j];
 			}
 		}
@@ -86,5 +87,21 @@ public class Shape {
 		}
 		
 		return m;
+	}
+	
+	//rotate shape
+	public Shape rotateShape() {
+		if(pieceShape == Tetrominos.SquareShape)
+			return this;
+		
+		Shape result = new Shape();
+		result.pieceShape = pieceShape;
+		
+		for(int i = 0; i < 4; i++) {
+			result.setX(i, y(i));
+			result.setY(i, -x(i));
+		}	
+		
+		return result;
 	}
 }

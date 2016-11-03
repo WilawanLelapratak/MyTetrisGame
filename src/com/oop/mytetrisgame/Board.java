@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -16,7 +18,6 @@ public class Board extends JPanel implements ActionListener {
 
 	private static final int BOARD_WIDTH = 10;
 	private static final int BOARD_HEIGHT = 22;
-	private static final Color[] COLORS = { new Color(0, 0, 0), new Color(204, 102, 102), new Color(102, 204, 102), new Color(102, 102, 204), new Color(204, 204, 102), new Color(204, 102, 204), new Color(102,204, 204), new Color(218, 170, 0) };
 	private Timer timer;
 	private boolean isFallingFinished = false;
 	private boolean isStarted = false;
@@ -35,6 +36,7 @@ public class Board extends JPanel implements ActionListener {
 		statusBar = parent.getStatusBar();
 		board = new Tetrominos[BOARD_WIDTH * BOARD_HEIGHT];
 		clearBoard();
+		addKeyListener(new MyTetrisGameAdapter());
 	}
 	
 	public int squareWidth() {
@@ -74,6 +76,7 @@ public class Board extends JPanel implements ActionListener {
 		curX = BOARD_WIDTH / 2 + 1;
 		curY = BOARD_HEIGHT - 1 + curPiece.minY();
 		
+
 		if(!tryMove(curPiece, curX, curY - 1)) {
 			curPiece.setShape(Tetrominos.NoShape);
 			timer.stop();
@@ -93,7 +96,7 @@ public class Board extends JPanel implements ActionListener {
 		if(isFallingFinished) {
 			isFallingFinished = false;
 			newPiece();
-		}else {
+		} else {
 			oneLineDown();
 		}
 		
@@ -102,14 +105,14 @@ public class Board extends JPanel implements ActionListener {
 	//Draw tetrominos
 	
 	private void drawSquare(Graphics g, int x, int y, Tetrominos shape) {
-		Color color = COLORS[shape.ordinal()];
+		Color color = shape.color;
 		g.setColor(color);
 		g.fillRect(x + 1, y + 1, squareWidth() - 2, squareHeight() - 2);
 		g.setColor(color.brighter());
 		g.drawLine(x,  y + squareHeight() - 1, x, y);
 		g.drawLine(x, y, x + squareWidth() - 1, y);
 		g.setColor(color.darker());
-		g.drawLine(x + 1, y + squareHeight() - 1, x + squareWidth() - 1, y + squareHeight() -1);
+		g.drawLine(x + 1, y + squareHeight() - 1, x + squareWidth() - 1, y + squareHeight() - 1);
 		g.drawLine(x + squareWidth() -1, y + squareHeight() - 1, x + squareWidth() - 1, y + 1);
 	}
 	
@@ -122,7 +125,7 @@ public class Board extends JPanel implements ActionListener {
 		int boardTop = (int) size.getHeight() - BOARD_HEIGHT * squareHeight();
 		
 		for(int i = 0; i < BOARD_HEIGHT; i++) {
-			for(int j = 0; j < BOARD_WIDTH; j++) {
+			for(int j = 0; j < BOARD_WIDTH; ++j) {
 				Tetrominos shape = shapeAt(j, BOARD_HEIGHT - i - 1);
 				
 				if(shape != Tetrominos.NoShape) {
@@ -211,7 +214,7 @@ public class Board extends JPanel implements ActionListener {
 				
 				for(int k = i; k < BOARD_HEIGHT - 1; ++k) {
 					for(int j = 0; j < BOARD_WIDTH; ++j) {
-						board[k * BOARD_WIDTH + j] = shapeAt(j, k+1);
+						board[k * BOARD_WIDTH + j] = shapeAt(j, k + 1);
 					}
 				}
 			}
@@ -241,4 +244,46 @@ public class Board extends JPanel implements ActionListener {
 		pieceDropped();
 	}
 	
+	class MyTetrisGameAdapter extends KeyAdapter {
+		@Override
+		public void keyPressed(KeyEvent ke) {
+			if(!isStarted || curPiece.getShape() == Tetrominos.NoShape) {
+				return;
+			}
+			
+			int keyCode = ke.getKeyCode();
+			
+			if(keyCode == 'P' || keyCode == 'p') {
+				pause();
+			}
+			
+			if(isPaused) {
+				return;
+			}
+			
+			switch(keyCode) {
+			case KeyEvent.VK_LEFT :
+				tryMove(curPiece, curX - 1, curY);
+				break;
+			case KeyEvent.VK_RIGHT :
+				tryMove(curPiece, curX + 1, curY);
+				break;
+			case KeyEvent.VK_DOWN :
+				tryMove(curPiece, curX, curY - 1);
+				break;
+			case KeyEvent.VK_UP :
+				tryMove(curPiece.rotateShape(), curX, curY);
+				break;
+			case KeyEvent.VK_SPACE :
+				dropDown();
+				break;
+			case 'd' :
+				oneLineDown();
+				break;
+			case 'D' :
+				oneLineDown();
+				break;
+			}
+		}
+	}
 }
