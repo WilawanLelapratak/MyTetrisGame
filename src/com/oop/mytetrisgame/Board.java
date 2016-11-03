@@ -270,7 +270,6 @@ public class Board extends JPanel implements ActionListener {
 				break;
 			case KeyEvent.VK_DOWN :
 				oneLineDown();
-//				tryMove(curPiece, curX, curY - 1);
 				break;
 			case KeyEvent.VK_UP :
 				tryMove(curPiece.rotateShape(), curX, curY);
@@ -278,12 +277,6 @@ public class Board extends JPanel implements ActionListener {
 			case KeyEvent.VK_SPACE :
 				dropDown();
 				break;
-//			case 'd' :
-//			oneLineDown();
-//				break;
-//			case 'D' :
-//				oneLineDown();
-//				break;
 			}
 		}
 	}
