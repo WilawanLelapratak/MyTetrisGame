@@ -81,7 +81,7 @@ public class Board extends JPanel implements ActionListener {
 			curPiece.setShape(Tetrominos.NoShape);
 			timer.stop();
 			isStarted = false;
-			statusBar.setText("Game Over");
+			statusBar.setText("Game Over! Your Score is " + String.valueOf(numLinesRemoved));
 		}
 	}
 	
@@ -129,7 +129,7 @@ public class Board extends JPanel implements ActionListener {
 				Tetrominos shape = shapeAt(j, BOARD_HEIGHT - i - 1);
 				
 				if(shape != Tetrominos.NoShape) {
-					drawSquare(g, j * squareWidth(), boardTop + 1 * squareHeight(), shape);
+					drawSquare(g, j * squareWidth(), boardTop + i * squareHeight(), shape); // Bottom line disappeared because I type 1 instead of i.
 				}
 			}
 		}
@@ -143,7 +143,7 @@ public class Board extends JPanel implements ActionListener {
 		}
 	}
 	
-	public void started() {
+	public void start() {
 		if(isPaused) {
 			return;
 		}
