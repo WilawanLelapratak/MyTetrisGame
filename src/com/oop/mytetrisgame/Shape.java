@@ -82,7 +82,7 @@ public class Shape {
 	public int minY() {
 		int m = coords[0][1];
 		
-		for(int i =0; i < 4; i++) {
+		for (int i =0; i < 4; i++) {
 			m = Math.min(m,  coords[i][1]);
 		}
 		
@@ -91,13 +91,13 @@ public class Shape {
 	
 	//rotate shape
 	public Shape rotateShape() {
-		if(pieceShape == Tetrominos.SquareShape)
+		if (pieceShape == Tetrominos.SquareShape)
 			return this;
 		
 		Shape result = new Shape();
 		result.pieceShape = pieceShape;
 		
-		for(int i = 0; i < 4; i++) {
+		for (int i = 0; i < 4; i++) {
 			result.setX(i, y(i));
 			result.setY(i, -x(i));
 		}	

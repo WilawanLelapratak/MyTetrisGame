@@ -1,8 +1,11 @@
 package com.oop.mytetrisgame;
 
+import Audio.AudioPlayer; // try to add background music
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -28,6 +31,7 @@ public class Board extends JPanel implements ActionListener {
 	private JLabel statusBar;
 	private Shape curPiece;
 	private Tetrominos[] board;
+	public AudioPlayer bgMusic; // try to add background music
 	
 	public Board(Tetris parent) {
 		setFocusable(true);
@@ -52,13 +56,13 @@ public class Board extends JPanel implements ActionListener {
 	}
 	
 	public void clearBoard() {
-		for(int i = 0; i < BOARD_HEIGHT * BOARD_WIDTH; i++) {
+		for (int i = 0; i < BOARD_HEIGHT * BOARD_WIDTH; i++) {
 			board[i] = Tetrominos.NoShape;
 		}
 	}
 	
 	private void pieceDropped() {
-		for(int i = 0; i < 4; i++) {
+		for (int i = 0; i < 4; i++) {
 			int x = curX + curPiece.x(i);
 			int y = curY  - curPiece.y(i);
 			board[y * BOARD_WIDTH + x] = curPiece.getShape();
@@ -66,7 +70,7 @@ public class Board extends JPanel implements ActionListener {
 		
 		removeFullLines();
 		
-		if(!isFallingFinished) {
+		if (!isFallingFinished) {
 			newPiece();
 		}
 	}
@@ -77,23 +81,26 @@ public class Board extends JPanel implements ActionListener {
 		curY = BOARD_HEIGHT - 1 + curPiece.minY();
 		
 
-		if(!tryMove(curPiece, curX, curY - 1)) {
+		if (!tryMove(curPiece, curX, curY - 1)) {
 			curPiece.setShape(Tetrominos.NoShape);
 			timer.stop();
 			isStarted = false;
 			statusBar.setText("Game Over! Your Score is " + String.valueOf(numLinesRemoved));
+			bgMusic.stop();
+			bgMusic = new AudioPlayer("/Music/Game Over.mp3");
+			bgMusic.play();
 		}
 	}
 	
 	private void oneLineDown() {
-		if(!tryMove(curPiece, curX, curY - 1)) {
+		if (!tryMove(curPiece, curX, curY - 1)) {
 			pieceDropped();
 		}
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent ae) {
-		if(isFallingFinished) {
+		if (isFallingFinished) {
 			isFallingFinished = false;
 			newPiece();
 		} else {
@@ -124,18 +131,18 @@ public class Board extends JPanel implements ActionListener {
 		
 		int boardTop = (int) size.getHeight() - BOARD_HEIGHT * squareHeight();
 		
-		for(int i = 0; i < BOARD_HEIGHT; i++) {
-			for(int j = 0; j < BOARD_WIDTH; ++j) {
+		for (int i = 0; i < BOARD_HEIGHT; i++) {
+			for (int j = 0; j < BOARD_WIDTH; ++j) {
 				Tetrominos shape = shapeAt(j, BOARD_HEIGHT - i - 1);
 				
-				if(shape != Tetrominos.NoShape) {
+				if (shape != Tetrominos.NoShape) {
 					drawSquare(g, j * squareWidth(), boardTop + i * squareHeight(), shape); // Bottom line disappeared because I type 1 instead of i.
 				}
 			}
 		}
 		
-		if(curPiece.getShape() != Tetrominos.NoShape) {
-			for(int i = 0; i < 4; ++i) {
+		if (curPiece.getShape() != Tetrominos.NoShape) {
+			for (int i = 0; i < 4; ++i) {
 				int x = curX + curPiece.x(i);
 				int y = curY  - curPiece.y(i);
 				drawSquare(g, x * squareWidth(), boardTop + (BOARD_HEIGHT - y - 1) * squareHeight(), curPiece.getShape());
@@ -144,7 +151,7 @@ public class Board extends JPanel implements ActionListener {
 	}
 	
 	public void start() {
-		if(isPaused) {
+		if (isPaused) {
 			return;
 		}
 		
@@ -157,17 +164,19 @@ public class Board extends JPanel implements ActionListener {
 	}
 	
 	public void pause() { //use to pause game
-		if(!isStarted) {
+		if (!isStarted) {
 			return;
 		}
 		
 		isPaused = !isPaused;
 		
-		if(isPaused) {
+		if (isPaused) {
 			timer.stop();
+			bgMusic.stop(); // try to add background music
 			statusBar.setText("Paused");
 		} else {
 			timer.start();
+			bgMusic.loop(); // try to add background music
 			statusBar.setText(String.valueOf(numLinesRemoved));
 		}
 		
@@ -175,15 +184,15 @@ public class Board extends JPanel implements ActionListener {
 	}
 	
 	private boolean tryMove(Shape newPiece, int newX, int newY) {
-		for(int i = 0; i < 4; ++i) {
+		for (int i = 0; i < 4; ++i) {
 			int x = newX + newPiece.x(i);
 			int y = newY - newPiece.y(i);
 			
-			if(x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT) {
+			if (x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT) {
 				return false;
 			}
 			
-			if(shapeAt(x, y) != Tetrominos.NoShape) {
+			if (shapeAt(x, y) != Tetrominos.NoShape) {
 				return false;
 			}
 		}
@@ -199,27 +208,27 @@ public class Board extends JPanel implements ActionListener {
 	private void removeFullLines() {
 		int numFullLines = 0;
 		
-		for(int i = BOARD_HEIGHT - 1; i >= 0; --i) {
+		for (int i = BOARD_HEIGHT - 1; i >= 0; --i) {
 			boolean lineIsFull = true;
 			
-			for(int j = 0; j < BOARD_WIDTH; ++j) {
-				if(shapeAt(j, i) == Tetrominos.NoShape) {
+			for (int j = 0; j < BOARD_WIDTH; ++j) {
+				if (shapeAt(j, i) == Tetrominos.NoShape) {
 					lineIsFull = false;
 					break;
 				}
 			}
 			
-			if(lineIsFull) {
+			if (lineIsFull) {
 				++numFullLines;
 				
-				for(int k = i; k < BOARD_HEIGHT - 1; ++k) {
-					for(int j = 0; j < BOARD_WIDTH; ++j) {
+				for (int k = i; k < BOARD_HEIGHT - 1; ++k) {
+					for (int j = 0; j < BOARD_WIDTH; ++j) {
 						board[k * BOARD_WIDTH + j] = shapeAt(j, k + 1);
 					}
 				}
 			}
 			
-			if(numFullLines > 0) {
+			if (numFullLines > 0) {
 				numLinesRemoved += numFullLines;
 				statusBar.setText(String.valueOf(numLinesRemoved));
 				isFallingFinished = true;
@@ -233,8 +242,8 @@ public class Board extends JPanel implements ActionListener {
 	private void dropDown() {
 		int newY = curY;
 		
-		while(newY > 0) {
-			if(!tryMove(curPiece, curX, newY -1)) {
+		while (newY > 0) {
+			if (!tryMove(curPiece, curX, newY -1)) {
 				break;
 			}
 			
@@ -247,21 +256,21 @@ public class Board extends JPanel implements ActionListener {
 	class MyTetrisGameAdapter extends KeyAdapter {
 		@Override
 		public void keyPressed(KeyEvent ke) {
-			if(!isStarted || curPiece.getShape() == Tetrominos.NoShape) {
+			if (!isStarted || curPiece.getShape() == Tetrominos.NoShape) {
 				return;
 			}
 			
 			int keyCode = ke.getKeyCode();
 			
-			if(keyCode == 'P' || keyCode == 'p') {
+			if (keyCode == 'P' || keyCode == 'p') {
 				pause();
 			}
 			
-			if(isPaused) {
+			if (isPaused) {
 				return;
 			}
 			
-			switch(keyCode) {
+			switch (keyCode) {
 			case KeyEvent.VK_LEFT :
 				tryMove(curPiece, curX - 1, curY);
 				break;

@@ -1,9 +1,13 @@
 package com.oop.mytetrisgame;
 
+import java.applet.AudioClip;
 import java.awt.BorderLayout;
+import java.net.URL;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+
+import Audio.AudioPlayer;
 
 public class Tetris extends JFrame {
 
@@ -16,9 +20,13 @@ public class Tetris extends JFrame {
 		add(board);
 		board.start(); //start line down
 		setSize(400,800);
-		//setSize(200, 400);
 		setTitle("Tetris Game");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+		//start try add background music
+		board.bgMusic = new AudioPlayer("/Music/Techno - Tetris (Remix).mp3");
+		board.bgMusic.loop();
+		//end try add background music
 	}
 
 	public JLabel getStatusBar() {
