@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.HashMap;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -32,6 +33,7 @@ public class Board extends JPanel implements ActionListener {
 	private Shape curPiece;
 	private Tetrominos[] board;
 	public AudioPlayer bgMusic; // try to add background music
+	public HashMap<String, AudioPlayer> soundEffect; // try to add sound effect
 	
 	public Board(Tetris parent) {
 		setFocusable(true);
@@ -62,6 +64,8 @@ public class Board extends JPanel implements ActionListener {
 	}
 	
 	private void pieceDropped() {
+		soundEffect = new HashMap<String, AudioPlayer>();
+		soundEffect.put("dropped", new AudioPlayer("/SFX/Dropped.mp3"));
 		for (int i = 0; i < 4; i++) {
 			int x = curX + curPiece.x(i);
 			int y = curY  - curPiece.y(i);
@@ -71,6 +75,7 @@ public class Board extends JPanel implements ActionListener {
 		removeFullLines();
 		
 		if (!isFallingFinished) {
+			soundEffect.get("dropped").play();
 			newPiece();
 		}
 	}
@@ -210,14 +215,13 @@ public class Board extends JPanel implements ActionListener {
 		
 		for (int i = BOARD_HEIGHT - 1; i >= 0; --i) {
 			boolean lineIsFull = true;
-			
 			for (int j = 0; j < BOARD_WIDTH; ++j) {
 				if (shapeAt(j, i) == Tetrominos.NoShape) {
 					lineIsFull = false;
 					break;
 				}
 			}
-			
+
 			if (lineIsFull) {
 				++numFullLines;
 				

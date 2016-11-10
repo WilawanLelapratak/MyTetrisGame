@@ -22,11 +22,8 @@ public class Tetris extends JFrame {
 		setSize(400,800);
 		setTitle("Tetris Game");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
-		//start try add background music
 		board.bgMusic = new AudioPlayer("/Music/Techno - Tetris (Remix).mp3");
 		board.bgMusic.loop();
-		//end try add background music
 	}
 
 	public JLabel getStatusBar() {
