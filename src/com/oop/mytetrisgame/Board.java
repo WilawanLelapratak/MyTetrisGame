@@ -186,7 +186,7 @@ public class Board extends JPanel implements ActionListener {
 		} else {
 			timer.start();
 			bgMusic.loop(); // try to add background music
-			statusBar.setText(String.valueOf(numLinesRemoved));
+			statusBar.setText("Score : " + String.valueOf(numLinesRemoved));
 		}
 		
 		repaint();
@@ -238,7 +238,7 @@ public class Board extends JPanel implements ActionListener {
 			
 			if (numFullLines > 0) {
 				numLinesRemoved += numFullLines;
-				statusBar.setText(String.valueOf(numLinesRemoved));
+				statusBar.setText("Score : " + String.valueOf(numLinesRemoved));
 				isFallingFinished = true;
 				curPiece.setShape(Tetrominos.NoShape);
 				repaint();
