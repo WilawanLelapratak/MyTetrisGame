@@ -21,7 +21,7 @@ import com.oop.mytetrisgame.Shape.Tetrominos;
 public class Board extends JPanel implements ActionListener {
 
 	private static final int BOARD_WIDTH = 10;
-	private static final int BOARD_HEIGHT = 22;
+	private static final int BOARD_HEIGHT = 20;
 	private Timer timer;
 	private boolean isFallingFinished = false;
 	private boolean isStarted = false;
@@ -91,10 +91,14 @@ public class Board extends JPanel implements ActionListener {
 			timer.stop();
 			isStarted = false;
 			statusBar.setText("Game Over! Your Score is " + String.valueOf(numLinesRemoved));
-			bgMusic.stop();
-			bgMusic = new AudioPlayer("/Music/Game Over.mp3");
-			bgMusic.play();
+			stopAndPlayGameOverSound();
 		}
+	}
+	
+	public void stopAndPlayGameOverSound() {
+		bgMusic.stop();
+		bgMusic = new AudioPlayer("/Music/Game Over.mp3");
+		bgMusic.play();
 	}
 	
 	private void oneLineDown() {
