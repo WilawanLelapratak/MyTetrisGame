@@ -2,6 +2,7 @@ package com.oop.mytetrisgame;
 
 import java.applet.AudioClip;
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.net.URL;
 
 import javax.swing.JFrame;
@@ -15,6 +16,7 @@ public class Tetris extends JFrame {
 	
 	public Tetris() {
 		statusBar = new JLabel("Score : 0"); //to display lines number
+		statusBar.setFont(new Font("Score : 0", Font.BOLD, 22));
 		add(statusBar, BorderLayout.SOUTH);
 		Board board = new Board(this);
 		add(board);

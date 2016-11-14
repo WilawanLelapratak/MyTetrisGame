@@ -4,6 +4,7 @@ import Audio.AudioPlayer; // try to add background music
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -22,6 +23,7 @@ public class Board extends JPanel implements ActionListener {
 
 	private static final int BOARD_WIDTH = 10;
 	private static final int BOARD_HEIGHT = 20;
+	private static final int BORDER_WIDTH = 5;
 	private Timer timer;
 	private boolean isFallingFinished = false;
 	private boolean isStarted = false;
@@ -32,11 +34,13 @@ public class Board extends JPanel implements ActionListener {
 	private JLabel statusBar;
 	private Shape curPiece;
 	private Tetrominos[] board;
+
 	public AudioPlayer bgMusic; // try to add background music
 	public HashMap<String, AudioPlayer> soundEffect; // try to add sound effect
 	
 	public Board(Tetris parent) {
 		setFocusable(true);
+		setBackground(Color.BLACK);
 		curPiece = new Shape();
 		timer = new Timer(400, this); //timer for lines down
 		statusBar = parent.getStatusBar();
