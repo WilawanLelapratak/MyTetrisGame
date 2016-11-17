@@ -34,7 +34,6 @@ public class Board extends JPanel implements ActionListener {
 	private JLabel statusBar;
 	private Shape curPiece;
 	private Tetrominos[] board;
-
 	public AudioPlayer bgMusic; // try to add background music
 	public HashMap<String, AudioPlayer> soundEffect; // try to add sound effect
 	
@@ -98,7 +97,7 @@ public class Board extends JPanel implements ActionListener {
 			stopAndPlayGameOverSound();
 		}
 	}
-	
+
 	public void stopAndPlayGameOverSound() {
 		bgMusic.stop();
 		bgMusic = new AudioPlayer("/Music/Game Over.mp3");
@@ -174,8 +173,7 @@ public class Board extends JPanel implements ActionListener {
 		clearBoard();
 		newPiece();
 		timer.start(); //start java.swing.timer that will call actionPerformed each 400ms
-	}
-	
+	}	
 	public void pause() { //use to pause game
 		if (!isStarted) {
 			return;
